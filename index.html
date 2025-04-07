@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA Hola Mundo</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Vinculamos el manifiesto -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Establecemos un color de tema para navegadores móviles -->
+  <meta name="theme-color" content="#317EFB">
+</head>
+<body>
+  <div class="container">
+    <h1>Hola Mundo</h1>
+    <p>Bienvenido a mi PWA simple y rápida.</p>
+  </div>
+
+  <script>
+    // Registramos el service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          console.log('Service Worker registrado con éxito:', registration);
+        })
+        .catch(error => {
+          console.error('Error al registrar el Service Worker:', error);
+        });
+    }
+  </script>
+</body>
+</html>
