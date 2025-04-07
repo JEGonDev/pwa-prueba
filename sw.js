@@ -1,4 +1,4 @@
-// Versión de cache. Cambia este valor cuando actualices tus archivos.
+// Versión de cache. Actualiza este valor cuando se modifiquen los archivos.
 const CACHE_NAME = 'pwa-hola-mundo-v1';
 const FILES_TO_CACHE = [
   '/',
@@ -18,13 +18,13 @@ self.addEventListener('install', evt => {
   self.skipWaiting();
 });
 
-// Activación del Service Worker
+// Activación y limpieza de caches antiguas
 self.addEventListener('activate', evt => {
   evt.waitUntil(
     caches.keys().then(keyList => {
       return Promise.all(keyList.map(key => {
         if (key !== CACHE_NAME) {
-          console.log('Limpiando cache antigua', key);
+          console.log('Limpiando cache antigua:', key);
           return caches.delete(key);
         }
       }));
@@ -33,7 +33,7 @@ self.addEventListener('activate', evt => {
   self.clients.claim();
 });
 
-// Fetch: responde con recursos en caché primero, y en su defecto, realiza fetch a la red.
+// Intercepción de peticiones para servir contenido cacheado
 self.addEventListener('fetch', evt => {
   evt.respondWith(
     caches.match(evt.request)

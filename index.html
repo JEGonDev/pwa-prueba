@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <!-- Vinculamos el manifiesto -->
   <link rel="manifest" href="manifest.json">
-  <!-- Establecemos un color de tema para navegadores móviles -->
+  <!-- Color de tema para la barra de estado en dispositivos móviles -->
   <meta name="theme-color" content="#317EFB">
 </head>
 <body>
@@ -16,8 +16,9 @@
     <p>Bienvenido a mi PWA simple y rápida.</p>
   </div>
 
+  <!-- Script para registro del Service Worker e instalación de la app -->
   <script>
-    // Registramos el service worker
+    // Registro del Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
         .then(registration => {
@@ -27,6 +28,30 @@
           console.error('Error al registrar el Service Worker:', error);
         });
     }
+
+    // Manejo del evento de instalación de la PWA (beforeinstallprompt)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Previene que aparezca el mini-infobar por defecto en móviles
+      e.preventDefault();
+      deferredPrompt = e;
+      // Crea un botón de "Instalar App" de forma dinámica
+      const installButton = document.createElement('button');
+      installButton.innerText = 'Instalar App';
+      installButton.className = 'install-btn';
+      // Agregar estilos mínimos al botón mediante el mismo CSS o inline
+      document.body.appendChild(installButton);
+
+      installButton.addEventListener('click', async () => {
+        // Muestra el prompt para instalar
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`Respuesta del usuario: ${outcome}`);
+        // Reseteamos el deferredPrompt y ocultamos el botón
+        deferredPrompt = null;
+        installButton.style.display = 'none';
+      });
+    });
   </script>
 </body>
 </html>
